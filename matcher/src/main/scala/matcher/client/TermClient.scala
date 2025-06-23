@@ -5,7 +5,7 @@ import org.http4s.*
 import org.http4s.client.*
 import org.http4s.Method.*
 import io.circe.generic.auto.*
-import model.{Alert, QueryTerm}
+import model.QueryTerm
 import matcher.config.ConfigLoader
 import org.http4s.circe.*
 import org.http4s.circe.CirceEntityDecoder.* // Enables automatic decoding of JSON into Scala types
