@@ -1,19 +1,30 @@
 package matcher.logic
 
-import model._
+import model.{Alert, QueryTerm}
+import model.MatchResult
 
 object MatcherEngine {
+
   def matchAlert(alert: Alert, terms: List[QueryTerm]): List[MatchResult] = {
-    terms.flatMap { term =>
-      if (alert.contents.exists(c =>
-        c.language == term.language && matches(term, c.text.toLowerCase)
-      )) Some(MatchResult(alert.id, term.id)) else None
-    }
+    val text = alert.contents.find(_.language == alert.contents.head.language).map(_.text).getOrElse("")
+    terms.filter(t => matches(text, t))
+      .map(t => MatchResult(alert.id, t.id))
   }
 
-  private def matches(term: QueryTerm, text: String): Boolean = {
-    val termParts = term.text.toLowerCase.split("\\s+")
-    if (term.keepOrder) text.contains(term.text.toLowerCase)
-    else termParts.forall(text.contains)
+  def matches(text: String, term: QueryTerm): Boolean = {
+    val tokens = tokenize(text)
+    val termTokens = tokenize(term.text)
+
+    if (term.keepOrder)
+      tokens.sliding(termTokens.length).contains(termTokens)
+    else
+      termTokens.forall(tokens.contains)
   }
+
+  private def tokenize(text: String): List[String] =
+    text.toLowerCase
+      .replaceAll("[^\\p{L}\\p{Nd}]+", " ") // remove pontuação
+      .split("\\s+")
+      .filter(_.nonEmpty)
+      .toList
 }

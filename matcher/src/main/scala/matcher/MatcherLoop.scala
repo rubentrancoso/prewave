@@ -7,13 +7,12 @@ import matcher.logic._
 import matcher.memory._
 import model._
 
-object MatcherLoop {
+class MatcherLoop(alertClient: AlertClient) {
   def run(terms: List[QueryTerm]): IO[Unit] = {
-    val loop = for {
-      alerts <- AlertClient.fetchAlerts.handleErrorWith { err =>
-        IO.println(s"[Warning] Could not access the alert server (${err.getMessage}). Retrying in 10 seconds...") >>
-          IO.sleep(10.seconds) >>
-          IO.pure(List.empty[Alert]) // Retorna lista vazia para não interromper o loop
+    val processOnce = for {
+      alerts <- alertClient.fetchAlerts.handleErrorWith { err =>
+        IO.println(s"[Warning] Could not access the alert server (${err.getMessage}). Retrying in 10 seconds...") *>
+          IO.pure(List.empty[Alert])
       }
 
       newAlerts = alerts.filter(a => AlertCache.isNew(a.id))
@@ -29,13 +28,14 @@ object MatcherLoop {
           println(s"\tMatched Term: '${term.text}' [keepOrder=${term.keepOrder}]\n")
         }
       }
+
       _ <- IO.println("Matching done.")
       _ <- IO.sleep(10.seconds)
-      _ <- run(terms)
     } yield ()
 
-    loop.handleErrorWith { err =>
-      IO.println(s"[Erro inesperado] ${err.getMessage}") >> IO.sleep(10.seconds) >> run(terms)
+    // Executa o loop infinitamente, de forma segura e idiomática
+    processOnce.foreverM.handleErrorWith { err =>
+      IO.println(s"[Unexpected Error] ${err.getMessage}") >> IO.sleep(10.seconds)
     }
   }
 }
