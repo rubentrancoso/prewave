@@ -1,23 +1,34 @@
 package matcher.client
 
-import cats.effect._
-import org.http4s.client.dsl.io._
-import org.http4s.circe._
-import org.http4s.ember.client._
-import org.http4s._
-import io.circe.generic.auto._
-import model.QueryTerm
-import org.http4s.circe.CirceEntityDecoder._ // <- Importa implicits para .expect[List[T]]
+import cats.effect.*
+import org.http4s.*
+import org.http4s.client.*
+import org.http4s.Method.*
+import io.circe.generic.auto.*
+import model.{Alert, QueryTerm}
 import matcher.config.ConfigLoader
+import org.http4s.circe.*
+import org.http4s.circe.CirceEntityDecoder.* // Enables automatic decoding of JSON into Scala types
 
-object TermClient {
+/**
+ * HTTP client responsible for fetching query terms from the configured API endpoint.
+ *
+ * @param client Reusable HTTP client instance (e.g., EmberClient) passed as dependency.
+ */
+class TermClient(client: Client[IO]) {
+
+  // Load the appropriate URI from the application configuration
   private val uri: Uri = Uri.fromString(ConfigLoader.termUrl) match {
     case Right(u) => u
-    case Left(err) => throw new RuntimeException(s"Invalid alert URL: $err")
+    case Left(err) => throw new RuntimeException(s"Invalid term URL: $err")
   }
 
+  /**
+   * Fetches a list of query terms from the configured Prewave endpoint.
+   * Automatically decodes JSON responses into a List[QueryTerm].
+   *
+   * @return An effectful computation yielding a list of query terms.
+   */
   def fetchTerms: IO[List[QueryTerm]] =
-    EmberClientBuilder.default[IO].build.use { client =>
-      client.expect[List[QueryTerm]](Request[IO](Method.GET, uri))
-    }
+    client.expect[List[QueryTerm]](Request[IO](Method.GET, uri))
 }
