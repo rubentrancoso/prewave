@@ -63,6 +63,7 @@ The author does not yet have professional experience with Scala but undertook th
 
 - The configuration file `matcher/src/main/resources/application.conf` includes a sample API token in plain text. This was left intentionally for convenience during evaluation, even though embedding credentials directly in a repository is not recommended for real projects.
 - The `.idea/` directories are versioned so that local run configurations remain available. In a production environment these IDE-specific files should be listed in `.gitignore` and omitted from commits.
+- The in-memory `AlertCache` has no time-to-live and therefore grows indefinitely. This simplification was intentional for the exercise but would need improvement in a production scenario. Tests for other components, including the cache, were also omitted for brevity.
 
 ## Development Time
 
