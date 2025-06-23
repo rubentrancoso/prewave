@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ScalaCompilerConfiguration">
+    <option name="separateProdTestSources" value="true" />
+    <profile name="sbt 1" modules="IdeaProjects.matcher,IdeaProjects.matcher.main,IdeaProjects.matcher.test,matcher,matcher.main,matcher.test,mock-server,mock-server.main,mock-server.test,prewave-mock-server,prewave-mock-server.main,prewave-mock-server.test" />
+  </component>
+</project>
