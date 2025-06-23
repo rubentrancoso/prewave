@@ -26,6 +26,7 @@ Main components:
 - **`AppMain`** – entry point. It loads the terms via `TermClient` and starts the processing loop in `MatcherLoop`.
 - **`MatcherLoop`** – runs continuously (every 10 seconds) querying new alerts through `AlertClient`. Only unseen alerts are considered (tracked via `AlertCache`). For each new alert the `MatcherEngine` detects term occurrences and prints the result.
 - **`MatcherEngine`** – verifies whether a term occurs in a text, respecting the `keepOrder` setting and the alert language.
+- **Performance note** – the current implementation of `MatcherEngine.matches` re-tokenizes each term and scans the token list on every call. This yields an `O(n*m)` cost (text length `n`, term length `m`) and may become heavy with many terms or long alerts. Pre-tokenizing the query terms, using sets for unordered matching, or employing algorithms like Aho‑Corasick would improve scalability.
 - **`AlertClient`** and **`TermClient`** – perform the HTTP requests.
 - **`AlertCache`** – keeps in memory the ids of already processed alerts.
 - **Tests** – `MatcherEngineSpec.scala` covers the matching logic.
