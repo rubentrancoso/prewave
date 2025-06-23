@@ -58,3 +58,6 @@ Unit tests can be executed with `sbt test` in the `matcher` directory.
 This project was designed as a practical response to a coding challenge. The implementation balances **clean structure**, **realistic extensibility**, and **learning goals**. While it does not aim to be production-grade, the core design allows for future evolution and reflects good development practices in terms of modularity, configuration management, testability, and error handling.
 
 The author does not yet have professional experience with Scala but undertook this task with a proactive mindset, combining foundational knowledge from Java with modern development tools and the support of AI assistants.
+## Development Time
+
+The project was developed in approximately **4 to 5 hours** of focused implementation time to cover all required functionalities. An additional **1 to 2 hours** were spent preparing the repository structure and writing this README documentation.
