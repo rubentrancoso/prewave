@@ -58,6 +58,12 @@ Unit tests can be executed with `sbt test` in the `matcher` directory.
 This project was designed as a practical response to a coding challenge. The implementation balances **clean structure**, **realistic extensibility**, and **learning goals**. While it does not aim to be production-grade, the core design allows for future evolution and reflects good development practices in terms of modularity, configuration management, testability, and error handling.
 
 The author does not yet have professional experience with Scala but undertook this task with a proactive mindset, combining foundational knowledge from Java with modern development tools and the support of AI assistants.
+
+## Repository Notes
+
+- The configuration file `matcher/src/main/resources/application.conf` includes a sample API token in plain text. This was left intentionally for convenience during evaluation, even though embedding credentials directly in a repository is not recommended for real projects.
+- The `.idea/` directories are versioned so that local run configurations remain available. In a production environment these IDE-specific files should be listed in `.gitignore` and omitted from commits.
+
 ## Development Time
 
 The project was developed in approximately **4 to 5 hours** of focused implementation time to cover all required functionalities. An additional **1 to 2 hours** were spent preparing the repository structure and writing this README documentation.
